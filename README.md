@@ -80,5 +80,64 @@ contract SimpleFeedback {
 3. For integrations, use the ABI in `lib/contract.ts` and the deployed address above.
 
 ---
+# On-Chain User Feedback
+
+## Project Title
+On-Chain User Feedback — Simple feedback collection stored on the Flare Coston2 testnet
+
+## Contract Address
+`0x429b583a22099C7f8FE4De17a06F4fFC33489d92`  
+https://coston2-explorer.flare.network/address/0x429b583a22099C7f8FE4De17a06F4fFC33489d92
+
+## Description
+This project provides a minimal, production-oriented interface to a smart contract that stores short user feedback messages on-chain. The intention is to demonstrate a transparent, tamper-evident way to collect user comments or lightweight feedback without off-chain storage. The front-end is wallet-gated: users must connect their web3 wallet to submit feedback. Submissions are simple transactions that emit an event and append feedback to an on-chain array (accessible via read-only contract calls).
+
+The repository includes:
+- A typed ABI and contract address reference (`lib/contract.ts`).
+- A React hook (`hooks/useContract.ts`) that wraps read/write interactions, manages loading state, transaction lifecycle, and automatic refetches after confirmation.
+- A sample UI component (`components/sample.tsx`) that shows contract stats (total feedback count, latest feedback) and a form to submit new feedback.
+
+## Features
+- **Wallet-gated submissions**: users must connect their wallet to submit feedback.
+- **On-chain storage**: feedback is recorded on-chain; each submission emits a `FeedbackSubmitted` event.
+- **Read access**: contract exposes `feedbackCount` and `latestFeedback` for efficient reads.
+- **UX-friendly hook**: the included React hook encapsulates read/write calls, handles transaction hashes, confirmation states, refetching after confirmations, and surfaces errors for straightforward UI integration.
+- **Minimal surface area**: no constructor parameters and a small ABI — easy to audit and integrate.
+
+## How It Solves the Problem
+### Problem
+Collecting user feedback usually relies on centralised databases or third-party services, which introduces trust issues (data tampering, censorship), single points of failure, and complexity for transparency/audit requirements.
+
+### Solution
+This project demonstrates a simple, auditable pattern to collect feedback on an EVM-compatible chain (Flare Coston2 testnet). By storing feedback on-chain:
+- **Integrity**: feedback cannot be altered without leaving an on-chain trace.
+- **Transparency**: anyone can read submitted feedback via the contract or explorer.
+- **Simplicity**: the smart contract exposes a minimal API (`feedbackCount`, `latestFeedback`, `getFeedback`, `submitFeedback`) which simplifies frontend integration.
+- **Portability**: the same pattern can be used for public comment systems, audit trails, or simple message boards where immutability and provenance are desirable.
+
+### Typical Use Cases
+- Small projects that want a public, untampered log of user comments.
+- Prototype demos for on-chain message storage.
+- Educational examples showing how to build simple dApps with a read/write flow and transaction confirmation UX.
+
+## Technical Notes & Integration Tips
+- The hook `useFeedbackContract` centralises behavior:
+  - Reads `feedbackCount` and `latestFeedback`.
+  - Submits via `submitFeedback(message)` and triggers refetches after confirmation.
+  - Exposes `state` with `isLoading`, `isPending`, `isConfirming`, `isConfirmed`, `hash`, and `error` to drive UI feedback.
+- The sample UI demonstrates:
+  - Wallet gating (users are prompted to connect before interacting).
+  - Clear UX for submitting messages and monitoring transaction status.
+  - Read-only cards showing total feedback count and latest entry.
+- For production or larger messages:
+  - On-chain storage costs rise with message size; consider off-chain storage + on-chain hash if you need large payloads.
+  - Add input length caps and validation to reduce gas costs and avoid abuse.
+  - Consider pagination / batched reads if `feedbackCount` grows large.
+
+## Contract ABI & Address
+The project uses the ABI exported in `lib/contract.ts` and the deployed address above. Use those values for any external integrations (viem, ethers, wagmi, etc.).
+
+---
+
 
 If you'd like a different merge (for example, preserve a specific deployed tx link `0x426c8...`), tell me which parts to keep and I'll reapply accordingly.
