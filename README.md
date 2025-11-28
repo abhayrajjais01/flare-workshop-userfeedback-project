@@ -15,6 +15,8 @@ This repository implements a minimal, beginner-friendly smart contract and front
 ## Deployed Contract
 `0x429b583a22099C7f8FE4De17a06F4fFC33489d92`
 https://coston2-explorer.flare.network/address/0x429b583a22099C7f8FE4De17a06F4fFC33489d92
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e7cae216-ccb5-49ec-b53e-f9aa8878146a" />
+
 
 ## What It Does
 
